@@ -1,0 +1,135 @@
+#include <iostream>
+#include <vector>
+// #include <bits/stdc++.h>
+using namespace std;
+struct Node{
+    int data;
+    Node*next;
+    Node(int data):data(data),next(nullptr){}
+};
+class firstsll{
+public:
+  Node *head{};
+  Node*tail{};
+  int length;
+firstsll(): head(nullptr), tail(nullptr), length(0) {}
+void insert_end(int data) {
+        Node* newNode = new Node(data);
+
+        if (head == nullptr) {
+            // If the linked list is empty, make the new node both head and tail
+            head = tail = newNode;
+        }else {
+            // Insert the new node at the end and update the tail pointer
+            tail->next = newNode;
+            tail = newNode;
+        }
+        length++;
+
+        }
+void insert_front(int data){
+Node*temp=new Node(data);
+
+    temp->next = head;
+    head = temp;
+    length++;
+}
+void  delet_first(){
+
+    if (head== nullptr){
+    Node*temp=head;
+    cout<<"empty";
+    delete temp;
+
+    }
+
+    else{
+    Node*temp=head;
+    head=head->next;
+    delete temp;
+    }
+}
+Node*get_nth(int n){
+//function returns the pointer to the node
+int ct=0;
+for(Node*cur=head;cur!= nullptr;cur=cur->next){
+    if (++ct==n){
+      return cur;
+    }
+    return nullptr;
+}
+}
+Node*get_nth_back(int  n){
+int ct=0;
+for (Node* cur = head; cur ; cur=cur->next) {
+  ct++;
+}
+if (n==0||n>ct)return nullptr;
+else
+{
+  int res=ct-n+1;
+  int x=0;
+  for (Node* cur = head; cur ; cur=cur->next) {
+      if (++x==res)return cur;
+  }
+}
+}
+int search(int data){
+int idx=0;
+for (Node*cur=head;cur;cur=cur->next,idx++){
+    if (cur->data==data){
+      return idx;
+    }
+
+}
+return -1;
+}
+void print(){
+Node*temp=head;
+while (temp!= nullptr){
+    cout<<temp->data<<" ";
+    temp=temp->next;
+}
+cout<<"\n";
+}
+int get_length(){
+return length;
+}
+Node* get_tail() {
+Node* current = head;
+while (current != nullptr && current->next != nullptr) {
+    current = current->next;
+}
+return current;
+}
+~firstsll(){
+delete head;
+delete tail;
+}
+};
+bool comp(firstsll f1,firstsll f2){
+if  (f1.get_length()==f2.get_length()){
+Node*x=f1.head;
+Node*z=f2.head;
+while (x&&z){
+    if (x->data!=z->data)return false;
+    x=x->next;
+    z=z->next;
+}
+if (x||z)return false;
+return true;
+}
+
+else
+return false;
+}
+int main() {
+firstsll f,z;
+f.insert_end(10);
+f.insert_end(20);
+f.insert_end(30);
+z.insert_end(10);
+z.insert_end(20);
+z.insert_end(80);
+cout<<comp(f,z);
+}
