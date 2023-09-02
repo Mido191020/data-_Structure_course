@@ -1,0 +1,449 @@
+#include<bits/stdc++.h>
+using namespace std;
+struct Node {
+  int data;
+  Node* next;
+  Node(int data) : data(data), next(nullptr) {}
+};
+
+class firstsll {
+public:
+  Node* head{};
+  Node* tail{};
+  int length;
+
+  firstsll() : head(nullptr), tail(nullptr), length(0) {}
+
+  void insert_end(int data) {
+    Node* newNode = new Node(data);
+
+    if (head == nullptr) {
+      head = tail = newNode;
+    } else {
+      tail->next = newNode;
+      tail = newNode;
+    }
+    length++;
+  }
+
+  void insert_front(int data) {
+    Node* temp = new Node(data);
+    temp->next = head;
+    head = temp;
+
+    if (tail == nullptr) {
+      tail = head; // Update tail if this is the first element
+    }
+
+    length++;
+  }
+
+
+
+  void delet_first() {
+    if (head == nullptr) {
+      cout << "empty";
+    } else {
+      Node* temp = head;
+      head = head->next;
+      delete temp;
+      length--;
+    }
+  }
+
+  Node* get_nth(int n) {
+    int ct = 0;
+    for (Node* cur = head; cur; cur = cur->next) {
+      if (++ct == n) {
+        return cur;
+      }
+    }
+    return nullptr;
+  }
+    Node* get_previous(Node* target) {
+    if (target== head) return nullptr;
+    else if (target==tail) return get_nth(length-1);
+    else{
+      for (Node *cur = head, *prv = nullptr; cur; prv = cur, cur = cur->next) {
+        if (cur == target)
+          return prv;
+      }
+      return nullptr;
+    }
+    }
+
+
+    void left_rotate(int k) {
+    if (k == 0 || k == length) return;
+
+    Node* prev = get_previous(tail); // Get the previous node of the tail
+    Node* new_head = head;
+
+    // Traverse the list to find the new head and new tail
+    for (int i = 0; i < k; i++) {
+      prev = new_head;
+      new_head = new_head->next;
+    }
+
+    Node* new_tail = head; // Initialize new_tail with head
+
+    // Traverse to find the new tail
+    while (new_tail->next != nullptr) {
+      new_tail = new_tail->next;
+    }
+
+    tail->next = head; // Connect the current tail to the original head
+    head = new_head; // Update the new head
+    prev->next = nullptr; // Set the previous node's next pointer to NULL to make it the new tail
+    tail = new_tail; // Update the tail to the new tail
+    }
+
+  void print() {
+    Node* temp = head;
+    while (temp != nullptr) {
+      cout << temp->data << " ";
+      temp = temp->next;
+    }
+    cout << "\n";
+  }
+void remove_duplicates() {
+        if (head == nullptr) {
+        return;
+        }
+
+        Node* current = head;
+        while (current->next != nullptr) {
+        if (current->data == current->next->data) {
+        Node* temp = current->next;
+        current->next = current->next->next;
+        delete temp;
+        length--;
+        } else {
+        current = current->next;
+        }
+        }
+        }
+        void swap_head_and_tail() {
+        if (head == tail || !head || !tail) {
+        return;
+        }
+
+        Node* new_head = tail;
+        Node* new_tail = head;
+
+        // Traverse to find the second-to-last node
+        Node* prev_tail = nullptr;
+        Node* current = head;
+        while (current->next != tail) {
+        current = current->next;
+        }
+        prev_tail = current;
+
+        // Update links to achieve the swap
+        prev_tail->next = new_head;
+        tail->next = head->next;
+        new_head->next = nullptr;
+
+        // Update head and tail pointers
+        head = new_head;
+        tail = new_tail;
+}
+
+
+  Node*get_nth_back(int  n){
+    int ct=0;
+    for (Node* cur = head; cur ; cur=cur->next) {
+      ct++;
+    }
+    if (n==0||n>ct)return nullptr;
+    else
+    {
+      int res=ct-n+1;
+      int x=0;
+      for (Node* cur = head; cur ; cur=cur->next) {
+        if (++x==res)return cur;
+      }
+    }
+  }
+  int search(int data){
+    int idx=0;
+    for (Node*cur=head;cur;cur=cur->next,idx++){
+      if (cur->data==data){
+        return idx;
+      }
+
+    }
+    return -1;
+  }
+
+  int get_length(){
+    return length;
+  }
+  int get_postion(int val){
+        int idx=0;
+        for (Node*cur=head;cur;cur=cur->next,idx++){
+          if (cur->data==val){
+                return idx;
+          }
+
+        }
+        return -1;
+  }
+  Node* get_tail() {
+    Node* current = head;
+    while (current != nullptr && current->next != nullptr) {
+      current = current->next;
+    }
+    return current;
+  }
+  void delet_withKey(int data){
+    Node* prev = NULL;
+    for (Node* cur = head; cur; prev = cur, cur = cur->next) {
+      if (cur->data == data) {
+        if (cur == head) {
+          head = head->next;
+        } else if (cur == tail) {
+          tail = prev;
+          tail->next = NULL;
+        } else {
+          prev->next = cur->next;
+        }
+
+        delete cur;
+        break; // Stop the loop once the node is deleted
+      }
+    }
+  }
+  void swap_pairs(){
+    if (length%2==0){
+      for (Node* cur = head; cur ; cur=cur->next) {
+        swap(cur->data,cur->next->data);
+        if (cur->next!= nullptr)  cur=cur->next;
+        else
+          break ;
+      }
+    }
+    else
+    {
+for (Node* cur = head; cur->next!= nullptr; cur=cur->next) {
+        swap(cur->data,cur->next->data);
+        if (cur->next!= nullptr)  cur=cur->next;
+        else
+          break ;
+}
+    }
+  }
+  void reverse() {
+    if (length <= 1)
+return;
+
+    tail = head;
+    Node* prev = head;
+    Node* current = head->next;
+    Node* next = nullptr;
+
+    while (current) {
+next = current->next;
+current->next = prev;
+prev = current;
+current = next;
+    }
+
+    head = prev;
+    tail->next = nullptr;
+  }
+  void delete_even_positions()
+  {
+  for (Node* cur = head,*pref=NULL;cur; ) {
+    if(cur==head&&length>=2){
+        Node*temp=cur;
+        head=cur->next;
+        cur=head;
+        delete temp;
+        length--;
+    }
+    else if(cur->next){
+        Node* temp = cur->next;
+        pref->next = cur->next;
+        cur = cur->next;
+        delete temp;
+        length--;
+    }
+    else
+        break ;
+    if (cur){
+        pref=cur;cur=cur->next;
+    }
+  }
+  }
+void insert_sorted(int value) {
+        if (head == nullptr || head->data > value) {
+        insert_front(value);
+        return;
+        }
+  Node* current = head;
+
+  while (current->next && current->next->data < value) {
+    current = current->next;
+  }
+
+  Node* new_node = new Node(value);
+  new_node->next = current->next;
+  current->next = new_node;
+  length++;
+  }
+  void remove_last_occurance(int key) {
+  if (!head) {
+    return; // Empty list, nothing to remove
+  }
+
+  Node* last_occurrence = nullptr;
+  Node* cur = head;
+  Node* prev = nullptr;
+
+  // Traverse the list to find the last occurrence of the key
+  while (cur) {
+    if (cur->data == key) {
+        last_occurrence = cur;
+    }
+    prev = cur;
+    cur = cur->next;
+  }
+
+  if (last_occurrence) {
+    // If last occurrence is found, remove it
+    if (last_occurrence == head) {
+        head = head->next;
+    } else {
+        prev->next = last_occurrence->next;
+    }
+    delete last_occurrence;
+    length--;
+  }
+  }
+  void move_to_back(int key) {
+  if (!head) {
+    return; // Empty list, nothing to move
+  }
+
+  Node* cur = head;
+  Node* prev = nullptr;
+
+  // Traverse the list to find the node with the key
+  while (cur) {
+    if (cur->data == key) {
+        break;
+    }
+    prev = cur;
+    cur = cur->next;
+  }
+
+  if (cur) {
+    // If node is found, move it to the back
+    if (cur != tail) {
+        prev->next = cur->next;
+        tail->next = cur;
+        tail = cur;
+        tail->next = nullptr;
+    }
+  }
+  }
+  int max(Node* head = nullptr, bool is_first_call = true) {		// O(n) time - O(n) memory
+  // It is tricky to have function name same as standard
+  // use std for standard and this-> for the class for clarity
+  if (is_first_call)
+    return this->max(this->head, false);
+
+  if (head == nullptr)
+    return INT_MIN;		// initial min value
+  return std::max(head->data, this->max(head->next, false));
+  }
+  void Arrange_odd_and_even() {
+  if (length <= 2) {
+    return;
+  }
+  Node*current=head->next;
+  while (current){
+    int x= get_postion(current->data);
+    if(x%2!=0&&current->next!=NULL){
+
+        swap(current->data,current->next->data);
+    }
+    current=current->next;
+  }
+
+  }
+  void odd_pos_even_pos() {
+  if (length <= 2) {
+    return;
+  }
+
+  Node*first_even=head->next;
+        Node*first_odd=head;
+        while (first_odd->next&&first_odd->next->next){
+            Node*next_even=first_odd->next;
+            first_odd->next=first_odd->next->next;
+            next_even->next=  next_even->next->next;
+            first_odd=first_odd->next;
+            if (length%2==1)
+        tail=next_even;
+        }
+        first_odd->next=first_even;
+  }
+  void insert_after(Node *src, Node* target){
+        assert(src&&target);
+        target->next=src->next;
+        src->next=target;
+        length++;
+
+  }
+  void insert_alternate(firstsll &another){
+        if (!another.length) return;
+        if (!length){
+            head=another.head;
+            tail=another.tail;
+            length=another.length;
+
+        }
+        else{
+           Node*cur2=another.head;
+               for (Node* cur1 = head; cur1&&cur2 ;) {
+                 Node*cur2_next=cur2->next;
+                        insert_after(cur1,cur2);
+                        another.length--;
+                        cur2=cur2_next;
+                        if (cur1==tail){
+                                tail=another.tail;
+                                cur1->next->next=cur2;
+                                length+=another.length;
+                                break;
+                        }
+              				cur1 = cur1->next->next;
+
+        }
+        }
+        another.head = another.tail = nullptr;
+        another.length = 0;
+  }
+      ~firstsll() {
+    Node* current = head;
+    while (current != nullptr) {
+      Node* temp = current;
+      current = current->next;
+      delete temp;
+    }
+  }
+};
+
+int main() {
+  firstsll f;
+        f.insert_end(1);
+        f.insert_end(2);
+        f.insert_end(3);
+        f.insert_end(4);
+        
+  f.print();
+       f.Arrange_odd_and_even();
+  f.print();
+  return 0;
+}
